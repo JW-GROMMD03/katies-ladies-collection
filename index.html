@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katie's Ladies Collection</title>
+    
+    <!-- Forced Browser Tab Logo / Favicon (with cache buster) -->
+    <link rel="shortcut icon" type="image/jpeg" href="logo.jpeg?v=1">
+    <link rel="icon" type="image/jpeg" href="logo.jpeg?v=1">
+    <link rel="apple-touch-icon" href="logo.jpeg?v=1">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; }
+        h1, h2, h3, .brand-font { font-family: 'Playfair Display', serif; }
+        
+        /* Hide scrollbar for the nav but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .bg-alamode { background-color: #e6ecef; } 
+
+        /* Lively Logo Animations */
+        .animate-spin-slow {
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 0 0 rgba(148, 163, 184, 0.7); }
+            70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 10px rgba(148, 163, 184, 0); }
+            100% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 0 0 rgba(148, 163, 184, 0); }
+        }
+    </style>
+</head>
+<body class="text-gray-900 relative">
+
+    <!-- Luxury Header -->
+    <header class="bg-alamode w-full border-b border-gray-300 sticky top-0 z-40 shadow-sm">
+        <div class="container mx-auto px-4 md:px-6 py-4 md:py-6 flex justify-between items-center">
+            
+            <!-- Left Side: Circular Animated Logo -->
+            <div class="w-1/4 md:w-1/3 flex items-center justify-start">
+                <div class="relative w-12 h-12 md:w-16 md:h-16 cursor-pointer group" onclick="filterFromNav('', document.getElementById('nav-all'))">
+                    <!-- Spinning dashed outer ring -->
+                    <div class="absolute inset-[-4px] rounded-full border-[1.5px] border-dashed border-slate-500 animate-spin-slow group-hover:border-slate-900 transition-colors duration-300"></div>
+                    <!-- Pulsing shadow effect -->
+                    <div class="absolute inset-0 rounded-full animate-pulse-ring"></div>
+                    <!-- Circular Image -->
+                    <img src="logo.jpeg" alt="Logo" class="absolute inset-0 w-full h-full object-cover rounded-full shadow-md group-hover:scale-105 transition-transform duration-300 border border-white">
+                </div>
+            </div>
+
+            <!-- Center Header Text -->
+            <div class="w-1/2 md:w-1/3 text-center cursor-pointer" onclick="filterFromNav('', document.getElementById('nav-all'))">
+                <h1 class="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-widest brand-font uppercase text-slate-900 text-shadow-sm leading-tight">
+                    Katie's <span class="block md:inline text-[10px] sm:text-sm md:text-xl lg:text-2xl tracking-[0.2em] text-slate-700">Ladies Collection</span>
+                </h1>
+            </div>
+
+            <!-- Right Side Icons & Currency -->
+            <div class="w-1/4 md:w-1/3 flex justify-end items-center gap-3 md:gap-5 text-gray-700">
+                <div class="hidden lg:flex items-center gap-2 text-xs font-semibold text-gray-600 mr-2 border-r border-gray-300 pr-4">
+                    <span>🇰🇪 KES</span>
+                </div>
+                <button class="hover:text-black transition"><svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="hover:text-black transition"><svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></button>
+                <button class="hover:text-black transition"><svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg></button>
+            </div>
+        </div>
+
+        <!-- Horizontal Navigation -->
+        <nav class="container mx-auto px-4 md:px-6 pb-4 md:pb-5 flex justify-start md:justify-center gap-6 md:gap-12 text-[11px] md:text-[12px] font-bold tracking-[0.15em] uppercase overflow-x-auto whitespace-nowrap hide-scrollbar">
+            <a id="nav-all" href="javascript:void(0)" onclick="filterFromNav('', this)" class="nav-link text-black border-b-2 border-black pb-1 hover:text-black transition flex-shrink-0">All Items</a>
+            <a href="javascript:void(0)" onclick="filterFromNav('Handbag', this)" class="nav-link text-slate-600 pb-1 hover:text-black transition flex-shrink-0">Bags</a>
+            <a href="javascript:void(0)" onclick="filterFromNav('Clothing', this)" class="nav-link text-slate-600 pb-1 hover:text-black transition flex-shrink-0">Clothing</a>
+            <a href="javascript:void(0)" onclick="filterFromNav('Jewelry', this)" class="nav-link text-slate-600 pb-1 hover:text-black transition flex-shrink-0">Fine Jewelry</a>
+            <a href="javascript:void(0)" onclick="filterFromNav('Special', this)" class="nav-link text-red-800 pb-1 hover:text-red-900 transition flex-shrink-0">Special Price</a>
+        </nav>
+    </header>
+
+    <!-- Auto-changing Hero Slider -->
+    <div class="relative w-full h-[250px] md:h-[500px] bg-[#311f18] overflow-hidden">
+        <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-100">
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-70">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-[#f0d5a3] z-10 px-4">
+                <p class="text-sm md:text-2xl font-serif italic mb-2">Apparel & Footwear</p>
+                <h2 class="text-3xl md:text-7xl font-serif uppercase tracking-widest mb-4">All 5% Off</h2>
+                <p class="text-xs md:text-xl tracking-widest">THIS MONTH ONLY</p>
+            </div>
+        </div>
+        <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-0">
+            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-70">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white z-10 px-4">
+                <p class="text-sm md:text-2xl font-serif italic mb-2">Luxury Handbags</p>
+                <h2 class="text-3xl md:text-7xl font-serif uppercase tracking-widest mb-4">New Arrivals</h2>
+                <p class="text-xs md:text-xl tracking-widest">DISCOVER THE COLLECTION</p>
+            </div>
+        </div>
+        <div class="hero-slide absolute inset-0 transition-opacity duration-1000 opacity-0">
+            <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-70">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-[#ffebd6] z-10 px-4">
+                <p class="text-sm md:text-2xl font-serif italic mb-2">Exclusive Brands</p>
+                <h2 class="text-3xl md:text-7xl font-serif uppercase tracking-widest mb-4">Designer Wear</h2>
+                <p class="text-xs md:text-xl tracking-widest">ELEVATE YOUR STYLE</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters & Grid Section -->
+    <main id="shop-section" class="container mx-auto px-4 md:px-6 py-8 md:py-12 scroll-mt-24 md:scroll-mt-32">
+        <div class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between border-b border-gray-200 pb-4 mb-8">
+            <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                <select id="filter-type" class="w-full sm:w-auto p-2 border-b border-gray-300 text-sm outline-none bg-transparent" onchange="fetchProducts()">
+                    <option value="">All Categories</option>
+                    <option value="Handbag">Handbags</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Jewelry">Jewelry</option>
+                </select>
+                <!-- DYNAMIC BRANDS DROPDOWN -->
+                <select id="filter-brand" class="w-full sm:w-auto p-2 border-b border-gray-300 text-sm outline-none bg-transparent" onchange="fetchProducts()">
+                    <option value="">All Brands</option>
+                </select>
+            </div>
+            <div class="text-xs text-gray-400 font-bold tracking-widest uppercase self-end md:self-auto"><span id="item-count">0</span> Items found</div>
+        </div>
+
+        <div id="loader" class="text-center text-gray-400 py-20 font-serif italic text-xl">Curating collection...</div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8 lg:gap-12" id="product-grid"></div>
+    </main>
+
+    <!-- FULL SCREEN IMAGE MODAL -->
+    <div id="image-modal" class="fixed inset-0 bg-black/95 z-[100] hidden flex justify-center items-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
+        <button class="absolute top-4 right-4 md:top-6 md:right-8 text-white text-4xl hover:text-gray-300 transition">&times;</button>
+        <img id="modal-image" src="" class="max-w-[95%] max-h-[90%] object-contain shadow-2xl rounded-sm">
+    </div>
+
+    <!-- WhatsApp Support Floating Button -->
+    <a href="https://wa.me/254140230946" target="_blank" class="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-black text-white p-3 md:p-4 rounded-full shadow-2xl z-40 flex items-center justify-center hover:scale-110 transition">
+        <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.384 0 12.03c0 2.122.553 4.153 1.602 5.968L.24 24l6.177-1.619a11.97 11.97 0 005.614 1.381h.005c6.645 0 12.028-5.385 12.028-12.03S18.675 0 12.031 0zm-1.127 17.151h-.002c-1.785 0-3.535-.48-5.068-1.388l-.363-.214-3.766.988.998-3.673-.235-.374a11.942 11.942 0 01-1.83-6.46C.641 5.385 6.024 0 12.03 0c2.909 0 5.643 1.134 7.698 3.193A10.875 10.875 0 0122.923 10.9c0 6.012-5.384 10.903-11.4 10.903z"></path></svg>
+    </a>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api';
+        let initialLoadDone = false; 
+
+        // --- HERO SLIDER ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        setInterval(() => {
+            slides[currentSlide].classList.replace('opacity-100', 'opacity-0');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.replace('opacity-0', 'opacity-100');
+        }, 5000);
+
+        // --- IMAGE MODAL LOGIC ---
+        function openImageModal(event, id, url) {
+            if (event) event.stopPropagation(); 
+            registerView(id); 
+            
+            const modal = document.getElementById('image-modal');
+            document.getElementById('modal-image').src = url;
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.replace('opacity-0', 'opacity-100'), 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.replace('opacity-100', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // --- DYNAMIC BRANDS ---
+        async function loadDynamicBrands() {
+            try {
+                const res = await fetch(`${API_URL}/products`);
+                const products = await res.json();
+                
+                const uniqueBrands = [...new Set(products.map(p => p.brand).filter(brand => brand && brand.trim() !== ""))];
+                
+                const brandSelect = document.getElementById('filter-brand');
+                brandSelect.innerHTML = '<option value="">All Brands</option>';
+                uniqueBrands.forEach(brand => {
+                    brandSelect.innerHTML += `<option value="${brand}">${brand}</option>`;
+                });
+            } catch (e) {
+                console.error("Failed to load brands", e);
+            }
+        }
+
+        // --- NAVIGATION CLICK HANDLER ---
+        function filterFromNav(category, element) {
+            document.getElementById('shop-section').scrollIntoView({ behavior: 'smooth' });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-black', 'border-b-2', 'border-black');
+                if (!link.classList.contains('text-red-800')) {
+                    link.classList.add('text-slate-600');
+                }
+            });
+
+            if (element && !element.classList.contains('text-red-800')) {
+                element.classList.remove('text-slate-600');
+                element.classList.add('text-black', 'border-b-2', 'border-black');
+            }
+
+            fetchProducts(category);
+        }
+
+        // --- PRODUCT FETCHING ---
+        async function fetchProducts(navType = null) {
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('product-grid').innerHTML = '';
+            
+            let isSpecialFilter = false;
+
+            if (navType !== null) {
+                if (navType === 'Special') {
+                    isSpecialFilter = true;
+                    document.getElementById('filter-type').value = ''; 
+                    document.getElementById('filter-brand').value = ''; 
+                } else {
+                    document.getElementById('filter-type').value = navType;
+                    document.getElementById('filter-brand').value = ''; 
+                }
+            }
+            
+            const type = document.getElementById('filter-type').value;
+            const brand = document.getElementById('filter-brand').value;
+
+            let url = new URL(`${API_URL}/products`);
+            if (type) url.searchParams.append('type', type);
+            if (brand) url.searchParams.append('brand', brand);
+
+            try {
+                const response = await fetch(url);
+                let products = await response.json();
+                
+                if (isSpecialFilter) {
+                    products = products.filter(p => p.original_price && p.original_price > p.price);
+                }
+
+                document.getElementById('item-count').innerText = products.length;
+                displayProducts(products);
+                
+                if (!initialLoadDone) {
+                    checkUrlForDeepLink(products);
+                    initialLoadDone = true;
+                }
+            } catch (e) {
+                console.error(e);
+            } finally {
+                document.getElementById('loader').classList.add('hidden');
+            }
+        }
+
+        function checkUrlForDeepLink(products) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemId = urlParams.get('item');
+            
+            if (itemId) {
+                const product = products.find(p => p.id === itemId);
+                if (product) {
+                    setTimeout(() => {
+                        openImageModal(null, product.id, product.image_url);
+                        document.getElementById('shop-section').scrollIntoView({ behavior: 'smooth' });
+                    }, 500);
+                }
+            }
+        }
+
+        function displayProducts(products) {
+            const grid = document.getElementById('product-grid');
+            products.forEach(product => {
+                const isSold = product.status === 'Sold';
+                const hasDiscount = product.original_price && product.original_price > product.price;
+                
+                grid.innerHTML += `
+                    <div class="group relative flex flex-col">
+                        <div class="relative w-full h-[200px] md:h-[320px] bg-gray-50 mb-3 md:mb-4 overflow-hidden cursor-pointer ${isSold ? 'opacity-50' : ''}" 
+                             onclick="openImageModal(event, '${product.id}', '${product.image_url}')">
+                            <img src="${product.image_url}" class="w-full h-full object-contain p-2 group-hover:scale-105 transition duration-700">
+                            ${isSold ? '<div class="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-sm z-20"><span class="bg-black text-white px-3 py-1 md:px-6 md:py-2 tracking-widest uppercase text-[10px] md:text-xs font-semibold">Sold Out</span></div>' : ''}
+                            
+                            <div class="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                                <svg class="w-6 h-6 md:w-8 md:h-8 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center px-1 flex-grow">
+                            <h4 class="font-bold text-gray-900 text-[11px] md:text-sm uppercase tracking-wider mb-1">${product.brand || product.category}</h4>
+                            <p class="text-[10px] md:text-xs text-gray-500 mb-1 md:mb-2 truncate">${product.name}</p>
+                            <div class="flex justify-center items-center gap-1 md:gap-2 text-[11px] md:text-sm">
+                                ${hasDiscount ? `<span class="line-through text-gray-400 text-[9px] md:text-xs">Ksh ${product.original_price.toLocaleString()}</span>` : ''}
+                                <span class="${hasDiscount ? 'text-red-700' : 'text-gray-900'} font-semibold">Ksh ${product.price.toLocaleString()}</span>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-2 right-2 md:top-4 md:right-4 opacity-0 group-hover:opacity-100 transition duration-300 z-30 hidden lg:block">
+                            <button onclick="orderViaWhatsApp(event, '${product.id}', '${product.name}', ${product.price})" 
+                                    class="bg-white p-2 md:p-3 rounded-full shadow-lg hover:bg-black hover:text-white transition"
+                                    ${isSold ? 'disabled' : ''}>
+                                <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            </button>
+                        </div>
+                        
+                        <div class="mt-2 lg:hidden">
+                            <button onclick="orderViaWhatsApp(event, '${product.id}', '${product.name}', ${product.price})" 
+                                    class="w-full bg-slate-900 text-white text-[10px] uppercase font-bold tracking-wider py-2 rounded-sm shadow-sm active:bg-slate-700"
+                                    ${isSold ? 'disabled class="opacity-50 cursor-not-allowed"' : ''}>
+                                ${isSold ? 'Sold Out' : 'Order Now'}
+                            </button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        async function registerView(id) { 
+            fetch(`${API_URL}/products/${id}/view`, { method: 'POST' }).catch(()=>console.log("View tracked")); 
+        }
+
+        async function orderViaWhatsApp(event, id, name, price) {
+            event.stopPropagation(); 
+            
+            const itemUrl = `${window.location.origin}${window.location.pathname}?item=${id}`;
+            const formattedPrice = price.toLocaleString();
+            
+            const message = `Hello Katie,\n\nI am interested in buying this item:\n*${name}*\n*Price:* Ksh ${formattedPrice}\n*Link:* ${itemUrl}\n\nI am ready to pay via M-Pesa to 0140230946.`;
+            
+            try { navigator.clipboard.writeText(message); } catch (err) {}
+            window.open(`https://wa.me/254140230946?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        // Initialize Data
+        loadDynamicBrands(); 
+        fetchProducts(); 
+    </script>
+</body>
+</html>

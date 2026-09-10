@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Internal Staff Portal</title>
+    
+    <!-- Forced Browser Tab Logo / Favicon (Updated cache buster to v=2) -->
+    <link rel="shortcut icon" type="image/jpeg" href="logo.jpeg?v=2">
+    <link rel="icon" type="image/jpeg" href="logo.jpeg?v=2">
+    <link rel="apple-touch-icon" href="logo.jpeg?v=2">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Lively Logo Animations */
+        .animate-spin-slow {
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 0 0 rgba(148, 163, 184, 0.5); }
+            70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 10px rgba(148, 163, 184, 0); }
+            100% { transform: scale(0.9); opacity: 0.8; box-shadow: 0 0 0 0 rgba(148, 163, 184, 0); }
+        }
+    </style>
+
+    <script>
+        // Boot them out if they don't have a token
+        if (!localStorage.getItem('admin_token')) window.location.href = 'admin_login.html';
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 text-white h-full p-6 flex flex-col">
+        
+        <!-- Animated Circular Logo & Header -->
+        <div class="flex items-center gap-4 mb-10">
+            <div class="relative w-12 h-12 flex-shrink-0 group cursor-pointer">
+                <!-- Spinning dashed outer ring -->
+                <div class="absolute inset-[-4px] rounded-full border-[1.5px] border-dashed border-slate-500 animate-spin-slow group-hover:border-slate-300 transition-colors duration-300"></div>
+                <!-- Pulsing shadow effect -->
+                <div class="absolute inset-0 rounded-full animate-pulse-ring"></div>
+                <!-- Circular Image -->
+                <img src="logo.jpeg" alt="Logo" class="absolute inset-0 w-full h-full object-cover rounded-full shadow-md border border-slate-700">
+            </div>
+            
+            <h1 class="text-sm font-bold tracking-widest uppercase text-slate-200 leading-snug">
+                Katie's <br><span class="text-[10px] text-slate-400 tracking-wider">Ladies Collection</span>
+            </h1>
+        </div>
+
+        <nav class="space-y-4 text-sm flex-grow">
+            <a href="#" class="block p-3 bg-slate-800 rounded font-semibold border-l-4 border-blue-500">Inventory Management</a>
+        </nav>
+        <button onclick="logout()" class="block w-full text-left p-3 text-red-400 hover:bg-slate-800 rounded transition font-semibold">Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10 overflow-y-auto">
+        
+        <!-- Top Analytics Bar -->
+        <div class="grid grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Total Inventory</p>
+                <h3 class="text-3xl font-bold text-slate-800" id="stat-total">0</h3>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Items Sold</p>
+                <h3 class="text-3xl font-bold text-emerald-600" id="stat-sold">0</h3>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Total Item Views</p>
+                <h3 class="text-3xl font-bold text-blue-600" id="stat-views">0</h3>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">Add New Inventory</h2>
+        
+        <!-- Upload Form -->
+        <form id="add-form" onsubmit="uploadProduct(event)" class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 mb-10 grid grid-cols-2 gap-6 text-sm">
+            
+            <div><label class="block mb-1 font-semibold text-slate-700">Product Name</label>
+                <input type="text" id="p-name" class="w-full p-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500" required>
+            </div>
+            
+            <!-- Dynamic Brand Dropdown -->
+            <div>
+                <label class="block mb-1 font-semibold text-slate-700">Brand</label>
+                <select id="p-brand-select" class="w-full p-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500" onchange="toggleCustomInput('p-brand-select', 'p-brand-custom-container')">
+                    <option value="">No Brand / Unbranded</option>
+                    <option value="Hermes">Hermes</option>
+                    <option value="Gucci">Gucci</option>
+                    <option value="Chanel">Chanel</option>
+                    <option value="Louis Vuitton">Louis Vuitton</option>
+                    <option value="Dior">Dior</option>
+                    <option value="Prada">Prada</option>
+                    <option value="Cartier">Cartier</option>
+                    <option value="Rolex">Rolex</option>
+                    <option value="Other">Other (Enter Custom)</option>
+                </select>
+                <div id="p-brand-custom-container" class="hidden mt-2">
+                    <input type="text" id="p-brand-custom" placeholder="Type custom brand name..." class="w-full p-2 border border-blue-300 rounded bg-blue-50">
+                </div>
+            </div>
+            
+            <div><label class="block mb-1 font-semibold text-slate-700">Current Price (Ksh)</label>
+                <input type="number" id="p-price" class="w-full p-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500" required>
+            </div>
+            
+            <div><label class="block mb-1 font-semibold text-slate-700">Original Price (Leave blank if no discount)</label>
+                <input type="number" id="p-orig-price" class="w-full p-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500">
+            </div>
+            
+            <!-- Updated Type Dropdown -->
+            <div>
+                <label class="block mb-1 font-semibold text-slate-700">Type</label>
+                <select id="p-type" class="w-full p-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500" required>
+                    <option value="Handbag">Handbag</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Jewelry">Jewelry</option>
+                </select>
+            </div>
+            
+            <!-- Dynamic Category Dropdown -->
+            <div>
+                <label class="block mb-1 font-semibold text-slate-700">Category</label>
+                <select id="p-cat-select" class="w-full p-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500" onchange="toggleCustomInput('p-cat-select', 'p-cat-custom-container')" required>
+                    <option value="">Select Category...</option>
+                    <option value="Totes">Totes</option>
+                    <option value="Shoulder Bags">Shoulder Bags</option>
+                    <option value="Dresses">Dresses</option>
+                    <option value="Tops">Tops</option>
+                    <option value="Necklaces">Necklaces</option>
+                    <option value="Earrings">Earrings</option>
+                    <option value="Rings">Rings</option>
+                    <option value="Watches">Watches</option>
+                    <option value="Other">Other (Enter Custom)</option>
+                </select>
+                <div id="p-cat-custom-container" class="hidden mt-2">
+                    <input type="text" id="p-cat-custom" placeholder="Type custom category name..." class="w-full p-2 border border-blue-300 rounded bg-blue-50">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block mb-1 font-semibold text-slate-700">Color</label>
+                <input type="text" id="p-color" class="w-full p-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500" required>
+            </div>
+            
+            <!-- Enhanced File Upload with Preview -->
+            <div>
+                <label class="block mb-1 font-semibold text-slate-700">Upload Image File</label>
+                <input type="file" id="p-file" accept="image/*" class="w-full p-2 border border-slate-300 rounded focus:outline-none focus:border-blue-500" onchange="previewImage(event)" required>
+                <img id="image-preview" class="hidden mt-3 h-24 w-auto object-cover rounded border border-slate-200 shadow-sm">
+            </div>
+
+            <button type="submit" id="submit-btn" class="col-span-2 bg-slate-900 text-white font-bold py-4 rounded hover:bg-slate-800 transition shadow-md mt-4">Upload & Save Inventory</button>
+        </form>
+
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">Manage Current Stock</h2>
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider">
+                    <tr><th class="p-4">Item</th><th class="p-4">Price</th><th class="p-4">Views</th><th class="p-4">Status</th><th class="p-4 text-right">Actions</th></tr>
+                </thead>
+                <tbody id="inventory-table" class="text-sm divide-y divide-slate-100"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api';
+        const token = localStorage.getItem('admin_token');
+
+        function logout() {
+            localStorage.removeItem('admin_token');
+            window.location.href = 'admin_login.html';
+        }
+
+        // Handles showing/hiding the "Other" text input boxes
+        function toggleCustomInput(selectId, containerId) {
+            const select = document.getElementById(selectId);
+            const container = document.getElementById(containerId);
+            const customInput = container.querySelector('input');
+            
+            if (select.value === 'Other') {
+                container.classList.remove('hidden');
+                customInput.required = true;
+            } else {
+                container.classList.add('hidden');
+                customInput.required = false;
+                customInput.value = '';
+            }
+        }
+
+        // Instantly shows the selected image before uploading
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const img = document.getElementById('image-preview');
+                img.src = reader.result;
+                img.classList.remove('hidden');
+            }
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        async function loadInventory() {
+            const res = await fetch(`${API_URL}/products`);
+            const products = await res.json();
+            
+            // Calculate Analytics
+            document.getElementById('stat-total').innerText = products.length;
+            document.getElementById('stat-sold').innerText = products.filter(p => p.status === 'Sold').length;
+            document.getElementById('stat-views').innerText = products.reduce((sum, p) => sum + (p.views || 0), 0);
+
+            const tbody = document.getElementById('inventory-table');
+            tbody.innerHTML = '';
+
+            products.forEach(p => {
+                const isSold = p.status === 'Sold';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4 flex gap-4 items-center">
+                            <img src="${p.image_url}" class="w-12 h-12 object-cover rounded shadow-sm border border-slate-200">
+                            <div>
+                                <p class="font-bold text-slate-800">${p.name}</p>
+                                <p class="text-xs text-slate-500 uppercase tracking-wider">${p.brand || 'No Brand'} • ${p.category}</p>
+                            </div>
+                        </td>
+                        <td class="p-4 font-semibold">Ksh ${p.price.toLocaleString()}</td>
+                        <td class="p-4 text-slate-500">${p.views || 0}</td>
+                        <td class="p-4"><span class="${isSold ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'} px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">${p.status}</span></td>
+                        <td class="p-4 text-right space-x-3">
+                            <button onclick="toggleStatus('${p.id}', '${isSold ? 'In Stock' : 'Sold'}')" class="text-blue-600 hover:text-blue-800 font-semibold text-xs transition">
+                                Mark ${isSold ? 'In Stock' : 'Sold'}
+                            </button>
+                            <button onclick="deleteProduct('${p.id}')" class="text-red-500 hover:text-red-700 font-semibold text-xs transition">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        async function toggleStatus(id, newStatus) {
+            await fetch(`${API_URL}/admin/products/${id}/status`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+            loadInventory();
+        }
+
+        async function deleteProduct(id) {
+            if(confirm("Are you sure you want to completely delete this item from the database? This cannot be undone.")) {
+                await fetch(`${API_URL}/admin/products/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                loadInventory();
+            }
+        }
+
+        async function uploadProduct(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "Uploading to Cloudflare R2...";
+            btn.disabled = true;
+
+            // Determine final Brand & Category (checks if 'Other' was used)
+            const brandSelect = document.getElementById('p-brand-select').value;
+            const finalBrand = brandSelect === 'Other' ? document.getElementById('p-brand-custom').value : brandSelect;
+
+            const catSelect = document.getElementById('p-cat-select').value;
+            const finalCategory = catSelect === 'Other' ? document.getElementById('p-cat-custom').value : catSelect;
+
+            const formData = new FormData();
+            formData.append('name', document.getElementById('p-name').value);
+            formData.append('brand', finalBrand);
+            formData.append('price', document.getElementById('p-price').value);
+            formData.append('original_price', document.getElementById('p-orig-price').value || "");
+            formData.append('type', document.getElementById('p-type').value);
+            formData.append('category', finalCategory);
+            formData.append('color', document.getElementById('p-color').value);
+            formData.append('file', document.getElementById('p-file').files[0]);
+
+            try {
+                const res = await fetch(`${API_URL}/admin/products`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                
+                if(res.ok) {
+                    document.getElementById('add-form').reset();
+                    document.getElementById('image-preview').classList.add('hidden'); // Hide preview after success
+                    
+                    // Reset 'Other' custom inputs just in case
+                    document.getElementById('p-brand-custom-container').classList.add('hidden');
+                    document.getElementById('p-cat-custom-container').classList.add('hidden');
+                    
+                    loadInventory();
+                } else {
+                    const errData = await res.json();
+                    alert("Upload Failed: " + (errData.detail || "Unknown error"));
+                }
+            } catch(err) {
+                console.error(err);
+                alert("Upload Failed. Check console.");
+            }
+
+            btn.innerText = "Upload & Save Inventory";
+            btn.disabled = false;
+        }
+
+        loadInventory();
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+supabase
+pydantic
+fastapi-cache2
+python-dotenv
+boto3
+python-multipart
+requests
+PyJWT
+passlib[bcrypt]
